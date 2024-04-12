@@ -361,7 +361,7 @@ def stft(
             len(window.shape) == 1 and len(window) == win_length
         ), f'expected a 1D window tensor of size equal to win_length({win_length}), but got window with shape {window.shape}.'
     else:
-        window = paddle.ones(shape=(win_length,), dtype=x.dtype)
+        window = paddle.ones(shape=(win_length,), dtype=x.dtype).to(x.place)
 
     if win_length < n_fft:
         pad_left = (n_fft - win_length) // 2
@@ -558,7 +558,9 @@ def istft(
             if x.dtype in [paddle.float32, paddle.complex64]
             else paddle.float64
         )
-        window = paddle.ones(shape=(win_length,), dtype=window_dtype)
+        window = paddle.ones(shape=(win_length,), dtype=window_dtype).to(
+            x.place
+        )
 
     if win_length < n_fft:
         pad_left = (n_fft - win_length) // 2
